@@ -1,9 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller('')
+import { AppService } from './app.service';
+
+@Controller()
 export class AppController {
-  @Get()
-  home() {
-    return 'Welcome to my Movie API';
-  }
+    constructor(private readonly appService: AppService) {}
+
+    @Get()
+    getHello(): string {
+        return this.appService.getHello();
+    }
 }
