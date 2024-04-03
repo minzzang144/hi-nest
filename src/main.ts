@@ -1,9 +1,26 @@
-import { NestFactory } from '@nestjs/core';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
 
-import { AppModule } from './app.module';
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
-    await app.listen(3000);
+    catch(exception: unknown, host: ArgumentsHost): void {
+        // In certain situations `httpAdapter` might not be available in the
+        // constructor method, thus we should resolve it here.
+        const { httpAdapter } = this.httpAdapterHost;
+
+        const ctx = host.switchToHttp();
+
+        const httpStatus =
+            exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+
+        const responseBody = {
+            statusCode: httpStatus,
+            timestamp: new Date().toISOString(),
+            path: httpAdapter.getRequestUrl(ctx.getRequest()),
+        };
+
+        httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+    }
 }
-bootstrap();
