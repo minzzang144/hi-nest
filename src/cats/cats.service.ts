@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { CatCreateRequestDto } from './dto/cat-create-request.dto';
+import { CatReadQueryDto } from './dto/cat-read-query.dto';
 import { CatUpdateRequestDto } from './dto/cat-update-request.dto';
 import { Cat } from './interfaces/cat.interface';
 
@@ -12,11 +13,12 @@ export class CatsService {
         this.cats.push(catCreateRequestDto);
     }
 
-    readAll(): Cat[] {
+    readAll(catReadQueryDto: CatReadQueryDto): Cat[] {
+        console.log(catReadQueryDto);
         return this.cats;
     }
 
-    readOne(id: string): Cat {
+    readOne(id: number): Cat {
         return this.cats[id];
     }
 

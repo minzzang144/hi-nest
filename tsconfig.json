@@ -22,7 +22,8 @@
             "@src/*": ["src/*"],
             "@test/*": ["test/*"],
             "@filters/*": ["src/common/filters/*"],
-            "@middlewares/*": ["src/common/middlewares/*"]
+            "@middlewares/*": ["src/common/middlewares/*"],
+            "@pipes/*": ["src/common/pipes/*"]
         }
     }
 }
